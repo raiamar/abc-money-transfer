@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ABC.DTOs.Transaction.TransactionDto>
+
+@{
+    ViewData["Title"] = "Transaction Report";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Transaction Report</h2>
+
+    <!-- Filter by Date and Name -->
+    <form method="get" class="mb-3">
+        <div class="row">
+            <div class="col-md-3">
+                <label for="fromDate" class="form-label">From Date</label>
+                <input type="date" name="fromDate" id="fromDate" class="form-control" value="@ViewBag.FromDate" />
+            </div>
+            <div class="col-md-3">
+                <label for="toDate" class="form-label">To Date</label>
+                <input type="date" name="toDate" id="toDate" class="form-control" value="@ViewBag.ToDate" />
+            </div>
+            <div class="col-md-3">
+                <label for="name" class="form-label">Sender/Receiver</label>
+                <input type="text" name="name" id="name" class="form-control" value="@ViewBag.Name" />
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Sender First Name</th>
+                    <th>Sender Last Name</th>
+                    <th>Country</th>
+                    <th>Receiver First Name</th>
+                    <th>Receiver Last Name</th>
+                    <th>Country</th>
+                    <th>Transfer Amount (MYR)</th>
+                    <th>Rate</th>
+                    <th>Amount (NIR)</th>
+                    <th>Bank Name</th>
+                    <th>Account Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in Model)
+                {
+                    <tr>
+                        <td>@transaction.SenderFirstName</td>
+                        <td>@transaction.SenderLastName</td>
+                        <td>@transaction.SenderCountry</td>
+                        <td>@transaction.ReceiverFirstName</td>
+                        <td>@transaction.ReceiverLastName</td>
+                        <td>@transaction.ReceiverCountry</td>
+                        <td>@transaction.TransferAmountMYR</td>
+                        <td>@transaction.ExchangeRate</td>
+                        <td>@transaction.PayoutAmount</td>
+                        <td>@transaction.BankName</td>
+                        <td>@transaction.AccountNumber</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?fromDate=@ViewBag.FromDate&toDate=@ViewBag.ToDate&name=@ViewBag.Name&page=@(ViewBag.CurrentPage - 1)">Previous</a>
+                    </li>
+                }
+                @for (var i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="?fromDate=@ViewBag.FromDate&toDate=@ViewBag.ToDate&name=@ViewBag.Name&page=@i">@i</a>
+                    </li>
+                }
+                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?fromDate=@ViewBag.FromDate&toDate=@ViewBag.ToDate&name=@ViewBag.Name&page=@(ViewBag.CurrentPage + 1)">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <p class="text-center text-danger">No data found for the selected filters.</p>
+    }
+</div>

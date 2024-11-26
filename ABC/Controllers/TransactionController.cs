@@ -95,8 +95,26 @@ public class TransactionController : Controller
         return View(transactionDto);
     }
 
-    public IActionResult Report(int page = 1)
+
+    public async Task<IActionResult> Report([FromQuery] TransactionFilter filter)
     {
-        return View();
+        var date = DateTime.Now.Date;
+        if (!filter.FromDate.HasValue)
+            filter.FromDate = date;
+
+        if (!filter.ToDate.HasValue)
+            filter.ToDate = date;
+
+       var (transactions, totalCount) = await _transactionService.GetTransactionsAsync(filter);
+
+        var totalPages = (int)Math.Ceiling((double)totalCount / filter.PageSize);
+
+        ViewBag.CurrentPage = filter.PageNumber;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.FromDate = filter.FromDate?.ToString("yyyy-MM-dd");
+        ViewBag.ToDate = filter.ToDate?.ToString("yyyy-MM-dd");
+        ViewBag.Name = filter.Name;
+
+        return View(transactions);
     }
 }
