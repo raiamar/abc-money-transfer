@@ -1,0 +1,28 @@
+﻿@model ABC.DTOs.User.LoginUserDto
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container">
+    <h2 class="mt-4">Login</h2>
+    <form asp-action="Login" method="post" class="form-horizontal">
+        <div class="mb-3">
+            <label for="UserName" class="form-label">UserName</label>
+            <input asp-for="UserName" class="form-control" id="UserName" required />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Password" class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" id="Password" type="password" required />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+    <div class="mt-3">
+        Don't have an account? <a href="/User/Register">Register</a>
+    </div>
+</div>
