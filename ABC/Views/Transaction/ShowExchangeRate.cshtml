@@ -1,0 +1,81 @@
+﻿@using ABC.DTOs.Transaction
+@model List<Payload>
+@{
+    ViewData["Title"] = "Show All Exchange Rates";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Exchange Rates</h2>
+
+    <!-- Filter by date -->
+    <form method="get" class="mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="fromDate" class="form-label">From Date</label>
+                <input type="date" name="fromDate" id="fromDate" class="form-control" value="@ViewBag.FromDate" />
+            </div>
+            <div class="col-md-4">
+                <label for="toDate" class="form-label">To Date</label>
+                <input type="date" name="toDate" id="toDate" class="form-control" value="@ViewBag.ToDate" />
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Display table -->
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Currency</th>
+                    <th>Buy Rate</th>
+                    <th>Sell Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Date</td>
+                        <td>@item.Rates?.FirstOrDefault()?.Currency?.Iso3</td>
+                        <td>@item.Rates?.FirstOrDefault()?.Buy</td>
+                        <td>@item.Rates?.FirstOrDefault()?.Sell</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?fromDate=@ViewBag.FromDate&toDate=@ViewBag.ToDate&page=@(ViewBag.CurrentPage - 1)">Previous</a>
+                    </li>
+                }
+                @for (var i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="?fromDate=@ViewBag.FromDate&toDate=@ViewBag.ToDate&page=@i">@i</a>
+                    </li>
+                }
+                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="?fromDate=@ViewBag.FromDate&toDate=@ViewBag.ToDate&page=@(ViewBag.CurrentPage + 1)">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <p class="text-center text-danger">No data found for the selected date range.</p>
+    }
+
+</div>

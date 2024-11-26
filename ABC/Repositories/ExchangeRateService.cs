@@ -1,5 +1,6 @@
 ﻿using ABC.DTOs.Transaction;
 using ABC.Repositories.Interface;
+using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 
 public class ExchangeRateService : IExchangeRateService
@@ -14,7 +15,9 @@ public class ExchangeRateService : IExchangeRateService
     public async Task<TransactionResponseDto> GetExchangeRatesAsync(string fromDate, string toDate)
     {
         var currentDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
-        fromDate = string.IsNullOrWhiteSpace(fromDate) ? "2024-06-12" : fromDate;
+        var defaultFromDate = "2024-06-12";
+
+        fromDate = string.IsNullOrWhiteSpace(fromDate) ? defaultFromDate : fromDate;
         toDate = string.IsNullOrWhiteSpace(toDate) ? currentDate : toDate;
 
         var client = _httpClientFactory.CreateClient();
@@ -44,10 +47,11 @@ public class ExchangeRateService : IExchangeRateService
         }
         catch
         {
-            return new TransactionResponseDto
-            {
-                Payload = new List<Payload>(),
-            };
+            throw;
+            //return new TransactionResponseDto
+            //{
+            //    Payload = new List<Payload>(),
+            //};
         }
     }
 }

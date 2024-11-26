@@ -5,6 +5,12 @@ namespace ABC.DTOs.Transaction;
 
 public class TransactionResponseDto
 {
+    [JsonProperty("data")]
+    public Data Data { get; set; } = new Data();
+}
+
+public class Data
+{
     [JsonProperty("payload")]
     public List<Payload> Payload { get; set; } = new List<Payload>();
 }

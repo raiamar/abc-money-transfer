@@ -1,4 +1,5 @@
 using ABC.Models.Entities;
+using ABC.Repositories.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -17,6 +20,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/User/Login";
 });
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
