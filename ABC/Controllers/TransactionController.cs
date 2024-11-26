@@ -1,15 +1,19 @@
 ﻿using ABC.DTOs.Transaction;
+using ABC.Models.Entities;
 using ABC.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ABC.Controllers;
 
 public class TransactionController : Controller
 {
     private readonly IExchangeRateService _exchangeRateService;
-    public TransactionController(IExchangeRateService exchangeRateService)
+    private readonly ITransactionService _transactionService;
+    public TransactionController(IExchangeRateService exchangeRateService, ITransactionService transactionService)
     {
         _exchangeRateService = exchangeRateService;
+        _transactionService = transactionService;
     }
     public async Task<IActionResult> ShowExchangeRate(string? fromDate, string? toDate, int page = 1)
     {
@@ -40,15 +44,59 @@ public class TransactionController : Controller
         return View(paginatedData);
     }
 
+    [HttpGet]
     public IActionResult Create()
     {
-        // Render a form for creating transactions
-        return View();
+        return View(new TransactionDto());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(TransactionDto transactionDto)
+    {
+        if (ModelState.IsValid)
+        {
+            var currentDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+            var exchangeRates = await _exchangeRateService.GetExchangeRatesAsync(currentDate, currentDate);
+
+            var exchangeRate = exchangeRates.Data.Payload
+                                    .SelectMany(p => p.Rates)
+                                    .FirstOrDefault(r => r.Currency.Iso3 == "MYR")?.Buy;
+
+            var transaction = new Transaction
+            {
+                TransactionId = Guid.NewGuid().ToString(),
+                SenderFirstName = transactionDto.SenderFirstName,
+                SenderMiddleName = transactionDto.SenderMiddleName,
+                SenderLastName = transactionDto.SenderLastName,
+                SenderAddress = transactionDto.SenderAddress,
+                SenderCountry = transactionDto.SenderCountry,
+                ReceiverFirstName = transactionDto.ReceiverFirstName,
+                ReceiverMiddleName = transactionDto.ReceiverMiddleName,
+                ReceiverLastName = transactionDto.ReceiverLastName,
+                ReceiverAddress = transactionDto.ReceiverAddress,
+                ReceiverCountry = transactionDto.ReceiverCountry,
+                TransferAmount = transactionDto.TransferAmountMYR,
+                ExchangeRate = decimal.Parse(exchangeRate),
+                PayoutAmount = decimal.Parse(exchangeRate) * transactionDto.TransferAmountMYR,
+                BankName = transactionDto.BankName,
+                AccountNumber = transactionDto.AccountNumber,
+                CreatedAt = DateTime.UtcNow,
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+        };
+
+            await _transactionService.AddTransactionAsync(transaction);
+
+            //impliment payment logic for actual transaction
+            TempData["SuccessMessage"] = "Transaction success!";
+            return RedirectToAction("Index", "Home");
+        }
+
+        return View(transactionDto);
     }
 
     public IActionResult Report(int page = 1)
     {
-        // Implement pagination and filtering for transaction reports
         return View();
     }
 }

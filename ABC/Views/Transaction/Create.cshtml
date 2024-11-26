@@ -1,0 +1,126 @@
+﻿@model ABC.DTOs.Transaction.TransactionDto
+
+@{
+    ViewData["Title"] = "Transfer Money";
+}
+
+<h2 class="text-center">@ViewData["Title"]</h2>
+
+<div class="container">
+    <form asp-action="Create" method="post">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center mb-4">Sender Information</h4>
+
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label asp-for="SenderFirstName" class="form-label">First Name</label>
+                        <input asp-for="SenderFirstName" class="form-control" />
+                        <span asp-validation-for="SenderFirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label asp-for="SenderMiddleName" class="form-label">Middle Name</label>
+                        <input asp-for="SenderMiddleName" class="form-control" />
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label asp-for="SenderLastName" class="form-label">Last Name</label>
+                        <input asp-for="SenderLastName" class="form-control" />
+                        <span asp-validation-for="SenderLastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SenderAddress" class="form-label">Address</label>
+                    <input asp-for="SenderAddress" class="form-control" />
+                    <span asp-validation-for="SenderAddress" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SenderCountry" class="form-label">Country</label>
+                    <select asp-for="SenderCountry" class="form-control">
+                        <option value="Malaysia">Malaysia</option>
+                    </select>
+                </div>
+
+                <hr class="my-4">
+
+                <h4 class="card-title text-center mb-4">Receiver Information</h4>
+
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label asp-for="ReceiverFirstName" class="form-label">First Name</label>
+                        <input asp-for="ReceiverFirstName" class="form-control" />
+                        <span asp-validation-for="ReceiverFirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label asp-for="ReceiverMiddleName" class="form-label">Middle Name</label>
+                        <input asp-for="ReceiverMiddleName" class="form-control" />
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label asp-for="ReceiverLastName" class="form-label">Last Name</label>
+                        <input asp-for="ReceiverLastName" class="form-control" />
+                        <span asp-validation-for="ReceiverLastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ReceiverAddress" class="form-label">Address</label>
+                    <input asp-for="ReceiverAddress" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ReceiverCountry" class="form-label">Country</label>
+                    <select asp-for="ReceiverCountry" class="form-control">
+                        <option value="Nepal">Nepal</option>
+                    </select>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="form-group">
+                    <label asp-for="TransferAmountMYR" class="form-label">Transfer Amount (MYR)</label>
+                    <input asp-for="TransferAmountMYR" class="form-control" />
+                    <span asp-validation-for="TransferAmountMYR" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="BankName" class="form-label">Bank Name</label>
+                    <input asp-for="BankName" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AccountNumber" class="form-label">Account Number</label>
+                    <input asp-for="AccountNumber" class="form-control" />
+                    <span asp-validation-for="AccountNumber" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .card {
+        margin-top: 30px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .btn-lg {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+ <style/>

@@ -17,6 +17,9 @@ public class UserController : Controller
     }
     public IActionResult Register()
     {
+        if (User.Identity.IsAuthenticated)
+            return RedirectToAction("Index", "Home");
+
         return View();
     }
 
@@ -53,6 +56,9 @@ public class UserController : Controller
 
     public IActionResult Login()
     {
+        if (User.Identity.IsAuthenticated)
+            return RedirectToAction("Index", "Home");
+
         return View();
     }
 
