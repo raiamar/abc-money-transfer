@@ -17,7 +17,7 @@ public class TransactionController : Controller
     }
     public async Task<IActionResult> ShowExchangeRate(string? fromDate, string? toDate, int page = 1)
     {
-        int pageSize = 25;
+        int pageSize = 10;
         var response = await _exchangeRateService.GetExchangeRatesAsync(fromDate, toDate);
 
         if (response == null || response.Data == null || !response.Data.Payload.Any())

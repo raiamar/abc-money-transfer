@@ -37,13 +37,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.SelectMany(payload => payload.Rates, (payload, rate) => new { payload.Date, rate }))
                 {
                     <tr>
                         <td>@item.Date</td>
-                        <td>@item.Rates?.FirstOrDefault()?.Currency?.Iso3</td>
-                        <td>@item.Rates?.FirstOrDefault()?.Buy</td>
-                        <td>@item.Rates?.FirstOrDefault()?.Sell</td>
+                        <td>@item.rate.Currency?.Iso3</td>
+                        <td>@item.rate.Buy</td>
+                        <td>@item.rate.Sell</td>
                     </tr>
                 }
             </tbody>
